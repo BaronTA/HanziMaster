@@ -1,0 +1,215 @@
+:root {
+    --bg: #09090b;
+    --surface: #121216;
+    --text-primary: #f4f4f5;
+    --text-secondary: #71717a;
+    --accent: #e4e4e7;
+    --danger: #ef4444;
+    --success: #10b981;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+#fx-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 10;
+}
+
+#app {
+    width: 100%;
+    max-width: 680px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    z-index: 1;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid #27272a;
+    padding-bottom: 0.75rem;
+}
+
+h1 {
+    font-size: 0.875rem;
+    letter-spacing: 0.2em;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+#stats {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    display: flex;
+    gap: 1.5rem;
+}
+
+/* 100-Dot Visual Progress Bar */
+#progress-track {
+    display: grid;
+    grid-template-columns: repeat(25, 1fr);
+    gap: 4px;
+    width: 100%;
+    padding: 0.5rem 0;
+}
+
+.progress-dot {
+    height: 4px;
+    background: #18181b;
+    border-radius: 1px;
+    transition: background 0.2s ease;
+}
+
+.progress-dot.active {
+    background: var(--text-secondary);
+}
+
+.progress-dot.completed {
+    background: var(--text-primary);
+}
+
+#game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    min-height: 240px;
+    justify-content: center;
+}
+
+#prompt-type-indicator {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+#prompt-display {
+    font-size: 3.5rem;
+    font-weight: 400;
+    text-align: center;
+    letter-spacing: 0.05em;
+}
+
+#interaction-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Inputs */
+input.text-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid #27272a;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    padding: 1rem;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+input.input-pinyin:focus { border-color: #38bdf8; }
+input.input-english:focus { border-color: #f43f5e; }
+
+/* Horizontal Multiple Choice Alignment matching Keyboard [1-4] */
+.options-row {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+button.option-btn {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid #27272a;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 1.25rem;
+    padding: 1.25rem 0.5rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.1s ease;
+}
+
+button.option-btn span {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+button.option-btn:hover {
+    border-color: var(--text-secondary);
+    background: #18181b;
+}
+
+/* Screen Shake and Flash Animations */
+@keyframes screenShake {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-4px, 2px); }
+    40% { transform: translate(4px, -2px); }
+    60% { transform: translate(-2px, -2px); }
+    80% { transform: translate(2px, 2px); }
+    100% { transform: translate(0, 0); }
+}
+
+body.shake {
+    animation: screenShake 0.2s ease-in-out;
+}
+
+body.error-flash {
+    animation: errorFlashAnim 0.2s ease;
+}
+
+@keyframes errorFlashAnim {
+    0% { background-color: var(--bg); }
+    50% { background-color: rgba(239, 68, 68, 0.2); }
+    100% { background-color: var(--bg); }
+}
+
+body.success-flash {
+    animation: successFlashAnim 0.15s ease;
+}
+
+@keyframes successFlashAnim {
+    0% { background-color: var(--bg); }
+    50% { background-color: rgba(16, 185, 129, 0.15); }
+    100% { background-color: var(--bg); }
+}
