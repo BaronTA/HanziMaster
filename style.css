@@ -1,11 +1,10 @@
 :root {
     --bg: #09090b;
-    --surface: #121216;
     --text-primary: #f4f4f5;
-    --text-secondary: #71717a;
-    --accent: #e4e4e7;
+    --text-secondary: #a1a1aa;
     --danger: #ef4444;
     --success: #10b981;
+    --phase2-accent: #f97316;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
@@ -16,14 +15,12 @@
     padding: 0;
 }
 
-body {
+body, html {
+    width: 100vw;
+    height: 100vh;
     background-color: var(--bg);
     color: var(--text-primary);
     font-family: var(--font-sans);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     overflow: hidden;
 }
 
@@ -34,138 +31,283 @@ body {
     width: 100vw;
     height: 100vh;
     pointer-events: none;
-    z-index: 10;
+    z-index: 100;
 }
 
 #app {
-    width: 100%;
-    max-width: 680px;
-    padding: 2rem;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+}
+
+/* ==================== MAIN MENU VIEW ==================== */
+#menu-view {
+    width: 100vw;
+    height: 100vh;
+    background: #121216;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 2rem;
-    z-index: 1;
+    z-index: 10;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
-header {
+.menu-title {
+    font-size: 3rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    color: #e4e4e7;
+    text-transform: uppercase;
+}
+
+.menu-buttons {
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    border-bottom: 1px solid #27272a;
-    padding-bottom: 0.75rem;
-}
-
-h1 {
-    font-size: 0.875rem;
-    letter-spacing: 0.2em;
-    font-weight: 500;
-    color: var(--text-secondary);
-}
-
-#stats {
-    font-family: var(--font-mono);
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    display: flex;
-    gap: 1.5rem;
-}
-
-/* 100-Dot Visual Progress Bar */
-#progress-track {
-    display: grid;
-    grid-template-columns: repeat(25, 1fr);
-    gap: 4px;
+    flex-direction: column;
+    gap: 1rem;
     width: 100%;
-    padding: 0.5rem 0;
+    max-width: 360px;
 }
 
-.progress-dot {
-    height: 4px;
+.menu-btn {
     background: #18181b;
-    border-radius: 1px;
-    transition: background 0.2s ease;
+    border: 1px solid #3f3f46;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    padding: 1.25rem;
+    cursor: pointer;
+    text-align: center;
+    letter-spacing: 0.05em;
+    transition: all 0.15s ease;
 }
 
-.progress-dot.active {
-    background: var(--text-secondary);
+.menu-btn:hover {
+    border-color: var(--text-primary);
+    background: #27272a;
 }
 
-.progress-dot.completed {
-    background: var(--text-primary);
+/* ==================== COMBAT ARENA VIEW ==================== */
+#arena-view {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2rem 3rem;
 }
 
-#game-container {
+/* HUD / Health Bar Header & Hit Feedback */
+#arena-hud {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 950px;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.75);
+    padding: 0.6rem 1.25rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    z-index: 20;
+    transition: transform 0.1s ease, border-color 0.1s ease;
+}
+
+#arena-hud.hud-hit-flash {
+    transform: scale(1.02);
+    border-color: #fbbf24;
+    background: rgba(127, 29, 29, 0.85);
+}
+
+.hud-skull {
+    font-size: 1.5rem;
+}
+
+.health-bar-container {
+    flex: 1;
+    height: 22px;
+    background: rgba(0, 0, 0, 0.85);
+    border: 2px solid #7f1d1d;
+    border-radius: 3px;
+    display: flex;
+    gap: 2px;
+    padding: 2px;
+    overflow: hidden;
+}
+
+.hp-segment {
+    flex: 1;
+    background: #ef4444;
+    height: 100%;
+    transition: opacity 0.2s ease;
+}
+
+.hp-segment.depleted {
+    opacity: 0.15;
+    background: #27272a;
+}
+
+#boss-hp-text {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #fbbf24;
+    min-width: 80px;
+    text-align: right;
+}
+
+.exit-menu-btn {
+    background: #27272a;
+    border: 1px solid #52525b;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.15s ease;
+}
+
+.exit-menu-btn:hover {
+    background: #3f3f46;
+}
+
+/* Battleground Sprites Layer with Organic Squash & Stretch Breathing */
+#battleground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.sprite {
+    position: absolute;
+    bottom: 18%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    image-rendering: auto;
+    transform-origin: bottom center; /* Keeps feet firmly planted on the ground while scaling */
+}
+
+#hero-sprite {
+    left: 4%;
+    width: 210px;
+    height: 250px;
+    animation: squashStretchBreath 3s ease-in-out infinite;
+}
+
+#boss-sprite {
+    right: 2%;
+    width: 800px;
+    height: 800px;
+    animation: bossSquashStretchBreath 3.5s ease-in-out infinite;
+}
+
+/* Organic Squash and Stretch Breathing Keyframes */
+@keyframes squashStretchBreath {
+    0%, 100% {
+        transform: scaleX(1) scaleY(1);
+    }
+    50% {
+        transform: scaleX(1.025) scaleY(0.975); /* Slight horizontal widen, vertical squish */
+    }
+}
+
+@keyframes bossSquashStretchBreath {
+    0%, 100% {
+        transform: scaleX(1) scaleY(1);
+    }
+    50% {
+        transform: scaleX(1.015) scaleY(0.985); /* Heavy monster subtle flex */
+    }
+}
+
+/* Boss Phase 2 True Form Effects */
+#boss-sprite.phase2-true-form {
+    filter: drop-shadow(0 0 30px rgba(249, 115, 22, 0.95)) brightness(1.25);
+    animation: bossPulse 1.5s infinite alternate;
+}
+
+@keyframes bossPulse {
+    0% { transform: scaleX(1) scaleY(1); }
+    100% { transform: scaleX(1.03) scaleY(1.03); }
+}
+
+/* Center Interactive Battle UI */
+#battle-ui {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
-    min-height: 240px;
-    justify-content: center;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 750px;
+    margin: 0 auto;
+    z-index: 20;
+    background: rgba(0, 0, 0, 0.88);
+    padding: 1.75rem 2rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(6px);
 }
 
-#prompt-type-indicator {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 0.5rem;
-    text-align: center;
+#prompt-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
 }
 
 #prompt-display {
     font-size: 3.5rem;
-    font-weight: 400;
-    text-align: center;
+    font-weight: 500;
     letter-spacing: 0.05em;
-}
-
-#interaction-box {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-}
-
-/* Inputs */
-input.text-input {
-    width: 100%;
-    background: var(--surface);
-    border: 1px solid #27272a;
-    color: var(--text-primary);
-    font-family: var(--font-mono);
-    font-size: 1.25rem;
-    padding: 1rem;
     text-align: center;
-    outline: none;
-    transition: border-color 0.15s ease;
+    color: #ffffff;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.9);
 }
 
-input.input-pinyin:focus { border-color: #38bdf8; }
-input.input-english:focus { border-color: #f43f5e; }
+#sub-prompt-display {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.1em;
+}
 
-/* Horizontal Multiple Choice Alignment matching Keyboard [1-4] */
-.options-row {
+#options-row {
     display: flex;
     flex-direction: row;
-    gap: 0.5rem;
+    gap: 1rem;
     width: 100%;
 }
 
 button.option-btn {
     flex: 1;
-    background: var(--surface);
-    border: 1px solid #27272a;
+    background: #18181b;
+    border: 1px solid #3f3f46;
     color: var(--text-primary);
     font-family: var(--font-sans);
-    font-size: 1.25rem;
-    padding: 1.25rem 0.5rem;
+    font-size: 1.15rem;
+    padding: 1.1rem 0.5rem;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
     transition: all 0.1s ease;
 }
 
@@ -176,40 +318,76 @@ button.option-btn span {
 }
 
 button.option-btn:hover {
-    border-color: var(--text-secondary);
-    background: #18181b;
+    border-color: var(--text-primary);
+    background: #27272a;
 }
 
-/* Screen Shake and Flash Animations */
+/* Codex / Bestiary View */
+#codex-view {
+    width: 100vw;
+    height: 100vh;
+    background: #121216;
+    display: flex;
+    flex-direction: column;
+    padding: 2.5rem 3rem;
+    gap: 1.5rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 20;
+}
+
+.codex-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #27272a;
+    padding-bottom: 1rem;
+}
+
+.codex-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.codex-card {
+    background: #18181b;
+    border: 1px solid #27272a;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+}
+
+.codex-card:hover {
+    border-color: var(--text-secondary);
+}
+
+.codex-card-hanzi { font-size: 2rem; }
+.codex-card-pinyin { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); }
+.codex-card-eng { font-size: 0.85rem; color: var(--text-primary); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+
+/* Screen Animations */
 @keyframes screenShake {
     0% { transform: translate(0, 0); }
-    20% { transform: translate(-4px, 2px); }
-    40% { transform: translate(4px, -2px); }
-    60% { transform: translate(-2px, -2px); }
-    80% { transform: translate(2px, 2px); }
+    20% { transform: translate(-6px, 3px); }
+    40% { transform: translate(6px, -3px); }
+    60% { transform: translate(-3px, -3px); }
+    80% { transform: translate(3px, 3px); }
     100% { transform: translate(0, 0); }
 }
 
-body.shake {
-    animation: screenShake 0.2s ease-in-out;
-}
-
-body.error-flash {
-    animation: errorFlashAnim 0.2s ease;
-}
-
+body.shake { animation: screenShake 0.2s ease-in-out; }
+body.error-flash { animation: errorFlashAnim 0.2s ease; }
 @keyframes errorFlashAnim {
     0% { background-color: var(--bg); }
-    50% { background-color: rgba(239, 68, 68, 0.2); }
-    100% { background-color: var(--bg); }
-}
-
-body.success-flash {
-    animation: successFlashAnim 0.15s ease;
-}
-
-@keyframes successFlashAnim {
-    0% { background-color: var(--bg); }
-    50% { background-color: rgba(16, 185, 129, 0.15); }
+    50% { background-color: rgba(239, 68, 68, 0.3); }
     100% { background-color: var(--bg); }
 }
